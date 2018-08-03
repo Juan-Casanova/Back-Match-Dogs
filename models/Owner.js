@@ -21,6 +21,10 @@ const ownerSchema=new Schema({
     adress:{
         type:string,
         required:true
+    },
+    email:{
+        type:email,
+        required:true
     }
 },{
     timestamps:{
