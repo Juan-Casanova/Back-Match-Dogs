@@ -3,6 +3,7 @@ const bcrypt=require('bcrypt-nodejs');
 const jwt=require('../services/jwt');
 //const User=require('../models/User');
 const Follow=require('../models/Follow');
+const Publication=require('../models/Publication')
 const mongoosePaginate=require('mongoose-pagination');
 const fs=require('fs');
 const path=require('path');
@@ -223,9 +224,16 @@ async function getCountFollow(user_id){
         if(err)return handleError(err);
         return count;
     });
+
+    var publications=await Publication.count({"user":user_id}).exec((err,count)=>{
+        if(err) return handleError(err);
+        return count;
+    });
+
     return{
         following:following,
-        followed:followed
+        followed:followed,
+        publications:publications
     }
 }
 
@@ -254,12 +262,18 @@ function updateUser(req,res){
 function uploadImage(req,res){
     const userId=req.params.id;
 
+    if(userId != req.user.sub){
+        return res.status(500).send({message:"Error en la peticion"});
+    }
+
     if(req.files){
-        const file_path=req.files.image.path;
-        const file_split=file_path.split('\\')
-        const file_name=file_split[2];//es lo que se va enviar a la base de datos
-        const ext_split=file_name.split('\.');
-        const file_ext=ext_split[1];
+        var file_path=req.files.image.path;
+        console.log(file_path);
+        var file_split=file_path.split('\/');
+        console.log(file_split);
+        var file_name=file_split[2];//es lo que se va enviar a la base de datos
+        var ext_split=file_name.split('\.');
+        var file_ext=ext_split[1];
 
         if(userId != req.user.sub){
            return removeFilesOfUploads(res,file_path,"o tienes permiso de modificar los datos")
@@ -271,9 +285,9 @@ function uploadImage(req,res){
                 
                 if(err)return res.status(500).send({message:"Error en la peticion"});
 
-                if(!userUpdate) res.status(404).send({message:"no se ha podido actualizar"});
+                if(!userUpdated) res.status(404).send({message:"no se ha podido actualizar"});
 
-                return res.status(200).send({user:userUpdate}); 
+                return res.status(200).send({user:userUpdated}); 
             });
         }
         else{

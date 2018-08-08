@@ -32,8 +32,7 @@ const app = express();
 
 // Middleware Setup
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(cookieParser());
 
 // Express View engine setup
@@ -59,10 +58,18 @@ app.locals.title = 'Express - Generated with IronGenerator';
 
 const index = require('./routes/index');
 const follow=require('./routes/follow');
-const user=require('./routes/user')
+const user=require('./routes/user');
+const publication=require('./routes/publication');
+const message_routes=require('./routes/message')
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use('/', index);
 app.use('/',follow);
-app.use('/',user)
+app.use('/',user);
+app.use('/',publication)
+app.use('/',message_routes)
 
 
 module.exports = app;

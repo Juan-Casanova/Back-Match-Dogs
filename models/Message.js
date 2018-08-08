@@ -6,6 +6,7 @@ const messageSchema=new Schema({
         type:Schema.ObjectId,
         ref:'User'
     },
+    viewed:String,
     receiver:{
         type:Schema.ObjectId,
         ref:'User'
