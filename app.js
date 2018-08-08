@@ -44,10 +44,7 @@ app.use(require('node-sass-middleware')({
 }));
       
 
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-app.use(express.static(path.join(__dirname, 'public')));
-//app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
+
 
 
 
@@ -61,15 +58,31 @@ const follow=require('./routes/follow');
 const user=require('./routes/user');
 const publication=require('./routes/publication');
 const message_routes=require('./routes/message')
+const dog_routes=require('./routes/dog')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
+app.use(express.static(path.join(__dirname, 'public')));
+//app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
+
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+ 
+    next();
+});
 
 app.use('/', index);
 app.use('/',follow);
 app.use('/',user);
-app.use('/',publication)
-app.use('/',message_routes)
+app.use('/',publication);
+app.use('/',message_routes);
+app.use('/',dog_routes)
 
 
 module.exports = app;

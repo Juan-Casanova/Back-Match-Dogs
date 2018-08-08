@@ -3,29 +3,29 @@ const Schema = mongoose.Schema;
 
 const dogSchema=new Schema({
     name:{
-        type:string,
+        type:String,
         required:true
     },
     image:{
-        type:string,
-        default:"../public/images/default-perro.jpg"
+        type:String,
+        //default:"../public/images/default-perro.jpg"
     },
     raze:{
-        type:string,
+        type:String,
         required:true
     },
-    owner:[
+    user:
         {
             type: Schema.ObjectId,
             ref: 'User'
         }
-    ],
+    ,
     vaccinated:{
-        type:boolean,
+        type:String,
         required:true
     },
     pedigree:{
-        type:boolean,
+        type:String,
         required:true
     }
 },{
